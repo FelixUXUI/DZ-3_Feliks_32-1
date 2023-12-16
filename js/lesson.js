@@ -1,98 +1,42 @@
-const photoInput = document.querySelector("#phone_input");
-const photoButton = document.querySelector("#phone_button");
-const photoResult = document.querySelector("#phone_result");
+const tabContentBlocks = document.querySelectorAll('.tab_content_block');
+const tabsBlocks = document.querySelectorAll('.tab_content_item');
 
-const regExp = /\+996 [2574]\d{2} \d{2}-\d{2}-\d{2}/
+const toggleContent = (indexElement = 0) => {
+  tabContentBlocks.forEach((block, i) => block.style.display = i === indexElement ? 'block' : 'none');
+  tabsBlocks.forEach((block, i) => block.classList.toggle('tab_content_item_active', i === indexElement));
+};
 
-photoButton.onclick = () => {
-    if (regExp.test(photoInput.value)) {
-        photoResult.innerHTML = 'ok'
-        photoResult.style.color = '#00ff00'
-    }else {
-        photoResult.innerHTML = 'not ok'
-        photoResult.style.color = '#ff0000'
-    }
-}
+let sliderIndex = 0;
 
-const tabContentBlock = document.querySelector('.tab_content_block')
-const itemContentBlock = document.querySelector('.tab_content_items')
-const tabBlock = document.querySelector('.tab_content_item')
+const autoSlider = () => {
+  hideContentBlock();
+  sliderIndex = (sliderIndex + 1) % tabContentBlocks.length;
+  toggleContent(sliderIndex);
+};
 
+const phoneInput = document.querySelector('#phone_input');
+const phoneButton = document.querySelector('#phone_button');
+const phoneResult = document.querySelector('#phone_result');
 
-const hideContentBlock = () => {
-    tabContentBlock.forEach(tabContentBlock => {
-        tabContentBlock.style.display = 'none'
-    })
-    tabBlock.forEach(tabBlocks => {
-        tabBlocks.classList.remove('tab_content_item_active')
-    })
-}
+const validatePhone = () => {
+  const phone = phoneInput.value.trim();
+  const regex = /\+996 [2574]\d{2} \d{2}-\d{2}-\d{2}/;
+  if (regex.test(phone)) {
+    phoneResult.textContent = 'ok';
+    phoneResult.style.color = '#00ff00';
+  } else {
+    phoneResult.textContent = 'not ok';
+    phoneResult.style.color = '#ff0000';
+  }
+};
 
-const showContent = (indexElement = 0) => {
-    tabContentBlock[indexElement].style.display = 'block'
-    tabBlock[indexElement].classList.add('tab_content_item_active')
-}
-
-hideContentBlock()
-showContent()
+phoneButton.onclick = validatePhone;
 
 itemContentBlock.onclick = (event) => {
-    if (event.target.classList.contains('tab_content_item')) {
-        tabBlock.forEach((tabBlocks, tabIndex) => {
-            if (event.target === tabBlocks) {
-                hideContentBlock()
-                showContent(tabIndex)
-            }
-        })
-    }
-}
+  if (event.target.classList.contains('tab_content_item')) {
+    const index = tabsBlocks.indexOf(event.target);
+    if (index > -1) toggleContent(index);
+  }
+};
 
-let slaiderIndex = 0
-
-const autoSlaider = () => {
-    hideContentBlock()
-    slaiderIndex = (slaiderIndex + 1) % tabContentBlock.length
-    showContent(slaiderIndex)
-}
-setInterval(autoSlaider, 3000)
-
-//TAB SLIDER
-const tabContendBlocks = document.querySelectorAll('.tab_content_block')
-const tabsParentBlock = document.querySelector('.tab_content_items')
-const tabsBlocks = document.querySelectorAll('.tab_content_item')
-
-
-
-const hideTabContend = () => {
-    tabContendBlocks.forEach(tabContendBlock=> {
-        tabContendBlock.style.display = 'none'
-    })
-    tabsBlocks.forEach(tabBlock => {
-        tabBlock.classList.remove('tab_content_item_active')
-
-    })
-}
-const showTabContends = (indexElement = 0) => {
-    tabContendBlocks[indexElement].style.display = 'block'
-    tabsBlocks[indexElement].classList.add('tab_content_item_active')
-}
-hideTabContend()
-showTabContends()
-
-tabsParentBlock.onclick = (event) => {
-    if (event.target.classList.contains('tab_content_item')){
-        tabsBlocks.forEach((tabBlock, tabIndex)=> {
-            if (event.target === tabBlock){
-                hideTabContend()
-                showTabContends(tabIndex)
-            }
-        })
-    }
-}
-let sliderIndex = 0
-const autoSlider = () => {
-    hideTabContend()
-    sliderIndex = (sliderIndex + 1) % tabContendBlocks.length
-    showTabContends(sliderIndex)
-}
-setInterval(autoSlider, 3000)
+setInterval(autoSlider, 3000);
